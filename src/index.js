@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './css/main.css';
-import calc_winner from './js/calc_winner.js'; 
+import calc_winner from './js/calc_winner.js';
 
 function Square(props) {
   return (
@@ -29,19 +29,10 @@ class Board extends React.Component {
       return false;
     } else if (!this.state.hasWinner) {
       squares[i] = this.state.xIsNext ? 'X' : 'O';
-      
-      
-      let squares2 = squares.slice();
-      squares2.forEach(function(val, index, array) {
-        if (!val){
-          array[index] = ' ';
-        }
-      });
-      let squaresString = squares2.join('').toLowerCase();
-      console.log(calc_winner(3, squaresString));
-      // winner = calculateWinner(squares);
+
+      winner = calculateWinner(squares);
     }
-    
+
     this.setState({
       squares: squares,
       xIsNext: !this.state.xIsNext,
@@ -113,13 +104,15 @@ ReactDOM.render(
 
 
 function calculateWinner(squares) {
-  // let squares2 = squares.slice();
-  // squares2.forEach(function(val, index, array) {
-  //   if (!val){
-  //     array[index] = ' ';
-  //   }
-  // });
-  // let squaresString = squares2.join('').toLowerCase();
+  let squares2 = squares.slice();
+  squares2.forEach(function (val, index, array) {
+    if (!val) {
+      array[index] = ' ';
+    }
+  });
+  let squaresString = squares2.join('').toLowerCase();
+  return calc_winner(3, squaresString).winner;
+  
   // console.log(utils.findWinner(3, squaresString));
   // const lines = [
   //   [0, 1, 2],
@@ -137,5 +130,4 @@ function calculateWinner(squares) {
   //     return squares[a];
   //   }
   // }
-  return false;
 }

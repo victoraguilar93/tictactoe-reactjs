@@ -24,7 +24,7 @@
 export default function findWinner(length, boardString) {
 
   var fillEnum = {x: 'x', o: 'o', space: ' '};
-  var winnerEnum = {'x': 'WinnerX', 'o': 'WinnerO', 'c': 'CatsGame'};
+  var winnerEnum = {'x': 'X', 'o': '0', 'c': false};
   var hasSpace = false;
   var breakExpr = new RegExp('.{1,' + length + '}', 'g');
   var boardArray1d = boardString.match(breakExpr);
@@ -65,7 +65,7 @@ export default function findWinner(length, boardString) {
     var dWinner = dSearch(board);
     var dWinnerReverse = dSearch(board.map(reverseBoard));
     
-    console.log(hWinner, vWinner, dWinner, dWinnerReverse);
+    // console.log(hWinner, vWinner, dWinner, dWinnerReverse);
 
     // if (hWinner) {
     //   hWinner.extend({'type': 'h'});
@@ -91,7 +91,7 @@ export default function findWinner(length, boardString) {
    * @returns {*} String containing the winner name; undefined otherwise.
    */
   function hSearch(board) {
-    top:
+    begin:
       for (var i = 0; i < length; i++) {
         var hPrev = board[i][0];           // first: [0, 0] then: [1, 0], [2, 0], etc
         var hLineLength = 1;
@@ -99,14 +99,14 @@ export default function findWinner(length, boardString) {
         // Run through the line values vertically
         for (var j = 1; j < length; j++) {
 
-          var hNext = board[i] [j];        // then: [0, 1], [0, 2], [0, 3], etc
+          var hNext = board[i][j];        // then: [0, 1], [0, 2], [0, 3], etc
 
           if ((fillEnum.space === hPrev) || (fillEnum.space === hNext)) {
             hasSpace = true;
           }
 
           if (!(hPrev === hNext)) {
-            continue top;
+            continue begin;
           }
 
           if (!(fillEnum.space === hPrev) && ++hLineLength === length) { // the end of the line
