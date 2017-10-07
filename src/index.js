@@ -2,6 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './css/main.css';
 import calc_winner from './js/calc_winner.js';
+import SweetAlert from 'sweetalert-react';
+import 'sweetalert/dist/sweetalert.css';
 
 function Square(props) {
   return (
@@ -51,15 +53,17 @@ class Board extends React.Component {
     const winner = this.state.hasWinner
     let status;
     if (winner) {
-      status = "Winner player: " + winner;
+      status = "Ganador: " + winner;
     } else {
-      status = "Next player:  " + (this.state.xIsNext ? 'X' : 'O');
+      status = "Siguiente jugador:  " + (this.state.xIsNext ? 'X' : 'O');
     }
 
     return (
+
       <div>
         <div className="status">{status}</div>
         <div className="board-row">
+          {this.props.length}
           {this.renderSquare(0)}
           {this.renderSquare(1)}
           {this.renderSquare(2)}
@@ -80,27 +84,75 @@ class Board extends React.Component {
 }
 
 class Game extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      newGame: false
+    };
+  }
   render() {
+    let lengthProp = this.props.lengthBoard;
+    let lengthBoardInput = lengthProp > 2 ? lengthProp : 3;
     return (
       <div className="game">
+
         <div className="game-board">
-          <Board />
+          <Board length={lengthBoardInput} />
         </div>
         <div className="game-info">
-          <div>{/* status */}</div>
-          <ol>{/* TODO */}</ol>
+          <div>
+            <button
+              onClick={() => this.setState({ newGame: true })}
+            >
+              Nuevo juego
+            </button>
+          </div>
         </div>
       </div>
     );
+    <SweetAlert
+      show={this.state.newGame}
+      title="Ingrese el tamaño de su tablero"
+      text="Ejemplo: Si desea un tablero de 3x3 ingrese '3'"
+      placeholder=""
+      type="input"
+      onConfirm={inputValue => {
+        if (inputValue && !isNaN(inputValue)) {
+          this.setState({ newGame: false });
+          <Game lengthBoard={inputValue} />
+        }
+      }}
+    />
   }
 }
 
 // ========================================
 
 ReactDOM.render(
-  <Game />,
+  <SweetAlert
+    show={true}
+    title="Ingrese el tamaño de su tablero"
+    text="Ejemplo: Si desea un tablero de 3x3 ingrese '3'"
+    inputPlaceholder=""
+    type="input"
+    onConfirm={inputValue => {
+      <ValidInput render={1} lengthBoard={inputValue} />
+    }}
+  />,
   document.getElementById('root')
 );
+
+function ValidInput(props) {
+  let lengthBoard = props.lengthBoard;
+  if (lengthBoard && !isNaN(lengthBoard)) {
+    if(props.render === 1){
+      return <Game lengthBoard={lengthBoard} />
+    }else{
+
+    }
+    
+  }
+}
 
 
 function calculateWinner(squares) {
@@ -112,7 +164,7 @@ function calculateWinner(squares) {
   });
   let squaresString = squares2.join('').toLowerCase();
   return calc_winner(3, squaresString).winner;
-  
+
   // console.log(utils.findWinner(3, squaresString));
   // const lines = [
   //   [0, 1, 2],
