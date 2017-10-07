@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Square from './square.js'
 import calc_winner from './../js/calc_winner.js';
 
@@ -22,6 +22,7 @@ class Board extends React.Component {
             squares[i] = this.state.xIsNext ? 'X' : 'O';
 
             winner = calculateWinner(squares);
+            console.log(winner)
         }
 
         this.setState({
@@ -41,9 +42,9 @@ class Board extends React.Component {
     render() {
         const winner = this.state.hasWinner
         let status;
-        if (winner) {
-            status = "Ganador: " + winner;
-        } else {
+        if (winner || (winner === null)) {
+            status = winner === null ? "Empate" : "Ganador: " + winner;
+        } else if(winner === false) {
             status = "Siguiente jugador:  " + (this.state.xIsNext ? 'X' : 'O');
         }
 
@@ -80,9 +81,9 @@ function calculateWinner(squares) {
         }
     });
     let squaresString = squares2.join('').toLowerCase();
-    return calc_winner(3, squaresString).winner;
+    let calc = calc_winner(3, squaresString);
+    return calc === null ? null : calc.winner;
 
-    // console.log(utils.findWinner(3, squaresString));
     // const lines = [
     //   [0, 1, 2],
     //   [3, 4, 5],
